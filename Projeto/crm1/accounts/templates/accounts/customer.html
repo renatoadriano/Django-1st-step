@@ -52,7 +52,7 @@
             <table class="table table-sm">
                 <tr>
                     <th>Product</th>
-                    <th>Category</th>
+                    <th>Note</th>
                     <th>Date Ordered</th>
                     <th>Status</th>
                     <th>Update</th>
@@ -63,11 +63,11 @@
 
                 <tr>
                     <td>{{order.product}}</td>
-                    <td>{{order.product.category}}</td>
+                    <td>{{order.note}}</td>
                     <td>{{order.date_created}}</td>
                     <td>{{order.status}}</td>
                     <td><a class="btn btn-sm btn-info" href="{%  url 'update_order' order.id %}">Update</a></td>
-                    <td><a class="btn btn-sm btn-info" href="{%  url 'delete_order' order.id %}">Delete</a></td>
+                    <td><a class="btn btn-sm btn-danger" href="{%  url 'delete_order' order.id %}">Delete</a></td>
 
                 </tr>
                 {% endfor  %}
