@@ -65,7 +65,7 @@ def logoutUser(request):
 	return redirect('login')
 
 @login_required(login_url='login')
-@admin_only
+@allowed_users(allowed_roles=['customer', 'admin'])
 def home(request):
 	orders = Order.objects.all()
 	customers = Customer.objects.all()
@@ -114,9 +114,31 @@ def accountSettings(request):
 
 
 
+def add_product(request):
+	if request.method == 'POST':
+		name =request.POST['name']
+		category =request.POST['category']
+		price = request.POST['price']
+		product = Product(name = name, price = price, category = category)
+		product.save()
+		messages.info(request, "Product added succefully")
+		
+
+	else:
+		pass
+
+	product_list = Product.objects.all()
+	context = {
+		'name':name, 'category':category, 'price':price
+	}
+
+	return render(request, 'accounts/products.html', context)
+
+
+
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['customer', 'admin'])
 def products(request):
 	products = Product.objects.all()
 
@@ -171,6 +193,7 @@ def updateOrder(request, pk):
 	context = {'form':form}
 	return render(request, 'accounts/order_form.html', context)
 
+
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def deleteOrder(request, pk):
@@ -181,3 +204,18 @@ def deleteOrder(request, pk):
 
 	context = {'item':order}
 	return render(request, 'accounts/delete.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def accountSettings(request):
+	customer = request.user.customer
+	form = CustomerForm(instance=customer)
+
+	if request.method == 'POST':
+		form = CustomerForm(request.POST, request.FILES,instance=customer)
+		if form.is_valid():
+			form.save()
+
+
+	context = {'form':form}
+	return render(request, 'accounts/account_settings.html', context)

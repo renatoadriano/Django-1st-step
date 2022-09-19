@@ -1,0 +1,91 @@
+.password_reset{
+    font-family: "Sans-serif", verdana; 
+    background-color:#f2f2f2;
+    outline:1px solid black;
+    padding: 10px 20px;
+    width: 30%;
+    border-radius: 10px;
+}
+.title{
+background-color: #333333;
+font-size: 18px;
+color: black;
+margin-right: 20px;
+padding: 10px 20px;
+color: white;
+position: relative;
+} 
+
+
+.form{
+    background-color: #a6a6a6;
+    font-size: 18px;
+    color: #333333;
+    margin-right: 20px;
+    padding: 10px 20px;
+    position: relative;
+    list-style:none;
+    outline:1px solid #333333;
+    } 
+.errorlist{
+    background-color: red;
+    color: white;
+    width: 100%;
+    font-size: 13px;
+    padding: 5px ;
+    list-style: none;
+    
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+.helptext ul{
+    background-color: #ddd;
+    color: black;
+    width: 100%;
+    font-size: 13px;
+    padding: 5px ;
+    list-style: none;
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+.box {
+    width: 400px;
+    height: 20px;
+    border: 2px solid #000;
+    margin: 0 auto 15px;
+    text-align: center;
+    padding: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    position: relative;
+}
+.info {
+    background-color: #ddd;
+    border-color: #aaa; 
+}
+
+.warning {
+    background-color: #FFF484;
+    border-color: #DCC600;
+}
+
+.success {
+    background-color: #B9FFAB;
+    border-color: #116400;
+    color: #116400;
+}
+
+.error {
+    background-color: #EBB1B1;
+    border-color: #973939;
+    color: #973939;
+}
+.submit{
+    background-color: #B9FFAB;
+    border-color: #116400;
+    color: #116400;
+    text-decoration: none;
+    padding: 5px 20px;
+    border-radius: 10px;
+    border: 1px solid ;
+}
