@@ -113,26 +113,25 @@ def accountSettings(request):
 	return render(request, 'accounts/account_settings.html', context)
 
 
-
-def add_product(request):
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin','customer'])
+def add_products(request):
 	if request.method == 'POST':
 		name =request.POST['name']
 		category =request.POST['category']
 		price = request.POST['price']
-		product = Product(name = name, price = price, category = category)
-		product.save()
-		messages.info(request, "Product added succefully")
-		
-
+		products = Product(name = name, price = price, category = category)
+		products.save()
 	else:
 		pass
 
-	product_list = Product.objects.all()
+	products = Product.objects.all()
 	context = {
 		'name':name, 'category':category, 'price':price
 	}
 
-	return render(request, 'accounts/products.html', context)
+	return render(request, 'accounts/products.html', {'products':products})
+
 
 
 

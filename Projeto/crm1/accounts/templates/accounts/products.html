@@ -2,8 +2,62 @@
 
 {% block content %}
 
-    <br>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+    <br>
+    <hr>
+                <div class="col-md">
+                    <div class="card card-body">
+                        <h5>Create a new product:</h5>
+                        <hr>
+
+
+                        <form method="POST" action="{% url 'add_products' %}">
+                        {% csrf_token %}
+                            <div class="form-group mb-3">
+                                <label>Product name</label>
+                                <input type="text" class="form-control" name="name" placeholder="Enter product name">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Category</label>
+                                <input type="text" class="form-control" name="category" placeholder="Product Category">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Price</label>
+                                <input type="text" class="form-control" name="price" placeholder="Product price">
+                            </div>
+
+                            <div class="text-center mt-4">
+
+                                <button type="submit" class="btn btn-primary" id="sweetalert">Submit</button>
+                                
+
+                            </div>
+                        </form>
+                        
+                        <br>
+
+                        <script>
+
+
+                            document.getElementById('sweetalert').addEventListener('click', function(){
+                                
+                                Swal.fire('Any fool can use a computer')
+                            })
+
+                        </script>
+
+                        
+
+
+
+
+                        
+                    </div>
+                </div>
+            </hr>
+            <br>
     <div class="row">
         <div class="col-md">
             <div class="card card-body">
@@ -25,43 +79,7 @@
                     {% endfor %}
                 </table>
             </div>
-            <hr>
-                <div class="col-md">
-                    <div class="card card-body">
-                        <h5>Create a new product:</h5>
-                        <hr>
-
-
-                        <form method="POST" action="{% url 'add_product' %}">
-                        {% csrf_token %}
-                            <div class="form-group mb-3">
-                                <label>Product name</label>
-                                <input type="text" class="form-control" name="name" placeholder="Enter product name">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label>Category</label>
-                                <input type="text" class="form-control" name="category" placeholder="Product Category">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label>Price</label>
-                                <input type="text" class="form-control" name="price" placeholder="Product price">
-                            </div>
-
-                            <div class="text-center mt-4">
-
-                                <button type="submit" class="btn btn-primary">Submit</button>
-
-                            </div>
-                        </form>
-                        
-
-
-
-
-                        
-                    </div>
-                </div>
-            </hr>
+            
         </div>
     </div>
 
