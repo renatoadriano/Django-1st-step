@@ -5,6 +5,8 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
+
+
     <br>
     <hr>
                 <div class="col-md">
@@ -30,31 +32,36 @@
 
                             <div class="text-center mt-4">
 
-                                <button type="submit" class="btn btn-primary" id="sweetalert">Submit</button>
+                                <button type="submit" class="btn btn-primary" id= "sweetalert">Submit</button>
                                 
-
+                            
                             </div>
                         </form>
                         
                         <br>
 
-                        <script>
-
-
-                            document.getElementById('sweetalert').addEventListener('click', function(){
-                                
-                                Swal.fire('Any fool can use a computer')
-                            })
-
-                        </script>
-
-                        
-
-
-
-
-                        
                     </div>
+                    <script >
+                        Swal.fire(
+                                {
+                                    title: "Good job", 
+                                    text: "You clicked the button!", 
+                                    type: "success",
+                                    showDenyButton: true,          // In case you want two scenarios 
+                                    denyButtonText: 'ABC',
+                                    showCancelButton: true,        // In case you want two scenarios 
+                                    cancelButtonText:'XYZ'
+                                }
+                            ).then(function (result) {
+                                if (result.isConfirmed) {
+                                    //You can add code here if user pressed ok button
+                                } else if (result.isDenied) {
+                                    //You can add code here if user pressed deny button
+                                } else if(result.isDismissed) {
+                                    //You can add code here if user pressed cancel button
+                                }
+                            )
+                    </script>
                 </div>
             </hr>
             <br>

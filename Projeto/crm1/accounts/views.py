@@ -135,7 +135,6 @@ def add_products(request):
 
 
 
-
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer', 'admin'])
 def products(request):
