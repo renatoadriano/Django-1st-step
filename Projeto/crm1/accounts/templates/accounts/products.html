@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
 
@@ -15,53 +15,33 @@
                         <hr>
 
 
-                        <form method="POST" action="{% url 'add_products' %}">
+                        
                         {% csrf_token %}
                             <div class="form-group mb-3">
                                 <label>Product name</label>
-                                <input type="text" class="form-control" name="name" placeholder="Enter product name">
+                                <input type="text" class="form-control" name="name" placeholder="Enter product name" id="prod_name">
                             </div>
                             <div class="form-group mb-3">
                                 <label>Category</label>
-                                <input type="text" class="form-control" name="category" placeholder="Product Category">
+                                <input type="text" class="form-control" name="category" placeholder="Product Category" id="prod_cat">
                             </div>
                             <div class="form-group mb-3">
                                 <label>Price</label>
-                                <input type="text" class="form-control" name="price" placeholder="Product price">
+                                <input type="number" class="form-control" name="price" placeholder="Product price" id="prod_price">
                             </div>
 
                             <div class="text-center mt-4">
 
-                                <button type="submit" class="btn btn-primary" id= "sweetalert">Submit</button>
+                                <button type="submit" class="btn btn-primary" onclick="create_product()">Submit</button>
                                 
                             
                             </div>
-                        </form>
+                        
                         
                         <br>
 
                     </div>
-                    <script >
-                        Swal.fire(
-                                {
-                                    title: "Good job", 
-                                    text: "You clicked the button!", 
-                                    type: "success",
-                                    showDenyButton: true,          // In case you want two scenarios 
-                                    denyButtonText: 'ABC',
-                                    showCancelButton: true,        // In case you want two scenarios 
-                                    cancelButtonText:'XYZ'
-                                }
-                            ).then(function (result) {
-                                if (result.isConfirmed) {
-                                    //You can add code here if user pressed ok button
-                                } else if (result.isDenied) {
-                                    //You can add code here if user pressed deny button
-                                } else if(result.isDismissed) {
-                                    //You can add code here if user pressed cancel button
-                                }
-                            )
-                    </script>
+                    
                 </div>
             </hr>
             <br>
@@ -76,12 +56,14 @@
                         <th>Product</th>
                         <th>Category</th>
                         <th>Price</th>
+                        <th>Delete</th>
                     </tr>
                     {% for i in products %}
                         <tr>
                             <td>{{i.name}}</td>
                             <td>{{i.category}}</td>
                             <td>{{i.price}}</td>
+                            <td><button class="btn btn-primary" onClick="delete_product('{{i.id}}')" >DELETE</button></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -91,5 +73,94 @@
     </div>
 
 
+    
+
+    <script>
+
+
+        
+        function create_product(){
+        
+            var prod_name = document.getElementById('prod_name').value
+            var prod_cat = document.getElementById('prod_cat').value
+            var prod_price = document.getElementById('prod_price').value
+            
+            console.log(prod_name + ': ' + prod_cat + ':' + prod_price )
+
+            
+            $.ajax({
+                    // points to the url where your data will be posted
+                url: "{% url 'add_products' %}",
+                    // post for security reason
+                type: "POST",
+                    // data that you will like to return
+                data: {
+                    prod_name:prod_name,
+                    prod_cat:prod_cat,
+                    prod_price:prod_price,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                
+                    // what to do when the call is success
+                success: function () {
+                    Swal.fire(
+                    'Good job!',
+                    'Product created successfully!',
+                    'success'
+                    ).then(function () {
+                        document.location.href = "{% url 'products' %}";
+                    });
+                },
+                    // what to do when the call is complete ( you can right your clean from code here)
+                complete: function () { },
+                    // what to do when there is an error
+                error: function (xhr, textStatus, thrownError) { 
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "Something went wrong!"
+                    })
+                }
+            });
+        }
+            function delete_product(id){
+        
+                
+                var prod_id = id
+                
+                console.log(prod_id )
+    
+                
+                $.ajax({
+                        // points to the url where your data will be posted
+                    url: "{% url 'delete_products' %}",
+                        // post for security reason
+                    type: "POST",
+                        // data that you will like to return
+                    data: {
+                        prod_id: prod_id,
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    },
+                    
+                        // what to do when the call is success
+                    success: function () {
+                        Swal.fire(
+                        'Good job!',
+                        'Product deleted successfully!',
+                        'success'
+                        ).then(function () {
+                            document.location.href = "{% url 'products' %}";
+                        });
+                    },
+                        // what to do when the call is complete ( you can right your clean from code here)
+                    complete: function () { },
+                        // what to do when there is an error
+                    error: function (xhr, textStatus, thrownError) { }
+                });
+                
+        }
+        
+
+    </script>
 
 {% endblock content%}

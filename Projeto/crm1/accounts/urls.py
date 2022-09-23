@@ -21,7 +21,9 @@ urlpatterns = [
     path('account/', views.accountSettings, name="account"),
 
     path('add_products/', views.add_products, name='add_products'),
-    
+
+    path('delete_products/', views.delete_products, name='delete_products'),
+
     path('products/', views.products, name='products'),
     path('customer/<str:pk_test>/', views.customer, name="customer"),
 

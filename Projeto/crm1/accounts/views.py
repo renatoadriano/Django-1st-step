@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 
@@ -117,22 +117,41 @@ def accountSettings(request):
 @allowed_users(allowed_roles=['admin','customer'])
 def add_products(request):
 	if request.method == 'POST':
-		name =request.POST['name']
-		category =request.POST['category']
-		price = request.POST['price']
-		products = Product(name = name, price = price, category = category)
+		#name = request.POST['name']
+		#category = request.POST['category']
+		#price = request.POST['price']
+		prod_name = request.POST.get('prod_name')
+		prod_price =request.POST.get('prod_price')
+		prod_cat = request.POST.get('prod_cat')
+
+		print(prod_name, prod_price, prod_cat)
+		products = Product(name = prod_name, price = prod_price, category = prod_cat)
 		products.save()
+		return JsonResponse({'status': 'true', 'message': 'Produto criado!'}, status=200, safe=False)
+		
 	else:
 		pass
 
 	products = Product.objects.all()
 	context = {
-		'name':name, 'category':category, 'price':price
+		'name':prod_name, 'category':prod_cat, 'price':prod_price
 	}
 
 	return render(request, 'accounts/products.html', {'products':products})
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin','customer'])
+def delete_products(request):
+	prod_id = request.POST.get('prod_id')
+	product = Product.objects.get(id = prod_id)
+	print(product.name, product.category, product.price)
 
+	if request.method == "POST":
+		product.delete()
+		return redirect('/')
+
+	context = {'item':product}
+	return render(request, 'accounts/products.html', context)
 
 
 @login_required(login_url='login')
@@ -204,7 +223,7 @@ def deleteOrder(request, pk):
 	return render(request, 'accounts/delete.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['customer'])
+@allowed_users(allowed_roles=['customer', 'admin'])
 def accountSettings(request):
 	customer = request.user.customer
 	form = CustomerForm(instance=customer)
