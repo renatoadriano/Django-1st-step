@@ -17,6 +17,7 @@
 
                         
                         {% csrf_token %}
+                        <input type="text" value="{{username}}" id="username" hidden="true">
                             <div class="form-group mb-3">
                                 <label>Product name</label>
                                 <input type="text" class="form-control" name="name" placeholder="Enter product name" id="prod_name">
@@ -53,17 +54,24 @@
             <div class="card card-body">
                 <table class="table">
                     <tr>
+                        <th>Creator</th>
+                        <th>Product ID</th>
                         <th>Product</th>
                         <th>Category</th>
                         <th>Price</th>
                         <th>Delete</th>
                     </tr>
+                    
                     {% for i in products %}
+                    {% csrf_token %}
+                    
                         <tr>
+                            <td>{{i.user}}</td>
+                            <td>{{i.id}}</td>
                             <td>{{i.name}}</td>
                             <td>{{i.category}}</td>
                             <td>{{i.price}}</td>
-                            <td><button class="btn btn-primary" onClick="delete_product('{{i.id}}')" >DELETE</button></td>
+                            <td><button class="btn btn-primary btn-danger" onClick="delete_product('{{i.id}}')" >DELETE</button></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -80,13 +88,15 @@
 
         
         function create_product(){
-        
+            
+            
             var prod_name = document.getElementById('prod_name').value
             var prod_cat = document.getElementById('prod_cat').value
             var prod_price = document.getElementById('prod_price').value
+            var username = document.getElementById('username').value
             
             console.log(prod_name + ': ' + prod_cat + ':' + prod_price )
-
+            
             
             $.ajax({
                     // points to the url where your data will be posted
@@ -98,6 +108,7 @@
                     prod_name:prod_name,
                     prod_cat:prod_cat,
                     prod_price:prod_price,
+                    username:username,
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
                 },
                 

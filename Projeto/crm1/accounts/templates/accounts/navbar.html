@@ -22,11 +22,15 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'products' %}">Products</a>
         </li>
-        
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'graphics' %}">Graphics</a>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link" href="{% url 'account' %}">Settings</a>
         </li>
-        
+
       </ul>
     </div>
     <span class="hello-msg">Hello, {{request.user}}</span>

@@ -13,8 +13,9 @@ from django.contrib.auth.models import Group
 # Create your views here.
 from .models import *
 from .forms import OrderForm, CreateUserForm, CustomerForm
-from .filters import OrderFilter
+from .filters import OrderFilter, Order
 from .decorators import unauthenticated_user, allowed_users, admin_only
+from datetime import date, timedelta, datetime
 
 @unauthenticated_user
 def registerPage(request):
@@ -67,18 +68,26 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer', 'admin'])
 def home(request):
+	
+	today_min = date.today()
+	print (today_min.day)
+	
+	today_orders = Order.objects.filter(date_created__day = today_min.day)
+	
+	
+	print(today_orders)
 	orders = Order.objects.all()
 	customers = Customer.objects.all()
 
 	total_customers = customers.count()
 
 	total_orders = orders.count()
-	delivered = orders.filter(status='Delivered').count()
+	delivered = orders.filter(date='Delivered').count()
 	pending = orders.filter(status='Pending').count()
 
 	context = {'orders':orders, 'customers':customers,
 	'total_orders':total_orders,'delivered':delivered,
-	'pending':pending }
+	'pending':pending, 'today_orders':today_orders}
 
 	return render(request, 'accounts/dashboard.html', context)
 
@@ -97,35 +106,25 @@ def userPage(request):
 	'delivered':delivered,'pending':pending}
 	return render(request, 'accounts/user.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['customer'])
-def accountSettings(request):
-	customer = request.user.customer
-	form = CustomerForm(instance=customer)
 
-	if request.method == 'POST':
-		form = CustomerForm(request.POST, request.FILES,instance=customer)
-		if form.is_valid():
-			form.save()
-
-
-	context = {'form':form}
-	return render(request, 'accounts/account_settings.html', context)
 
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin','customer'])
 def add_products(request):
+	
 	if request.method == 'POST':
 		#name = request.POST['name']
 		#category = request.POST['category']
 		#price = request.POST['price']
+
 		prod_name = request.POST.get('prod_name')
 		prod_price =request.POST.get('prod_price')
 		prod_cat = request.POST.get('prod_cat')
+		username= request.POST.get('username')
 
 		print(prod_name, prod_price, prod_cat)
-		products = Product(name = prod_name, price = prod_price, category = prod_cat)
+		products = Product(name = prod_name, price = prod_price, category = prod_cat, user= username)
 		products.save()
 		return JsonResponse({'status': 'true', 'message': 'Produto criado!'}, status=200, safe=False)
 		
@@ -157,9 +156,12 @@ def delete_products(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer', 'admin'])
 def products(request):
+	user = request.user
+	print(user)
 	products = Product.objects.all()
-
-	return render(request, 'accounts/products.html', {'products':products})
+	
+	context = {'products':products, 'username':user}
+	return render(request, 'accounts/products.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
@@ -230,9 +232,18 @@ def accountSettings(request):
 
 	if request.method == 'POST':
 		form = CustomerForm(request.POST, request.FILES,instance=customer)
+		
 		if form.is_valid():
 			form.save()
 
 
 	context = {'form':form}
 	return render(request, 'accounts/account_settings.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer', 'admin'])
+def graphics(request):
+	orders = Order.objects.all()
+	
+	context = {'orders':orders}
+	return render(request, 'accounts/graphics.html', context)
