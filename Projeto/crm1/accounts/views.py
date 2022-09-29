@@ -1,3 +1,4 @@
+from telnetlib import STATUS
 from django.shortcuts import render, redirect 
 from django.http import HttpResponse, JsonResponse
 from django.forms import inlineformset_factory
@@ -15,7 +16,9 @@ from .models import *
 from .forms import OrderForm, CreateUserForm, CustomerForm
 from .filters import OrderFilter, Order
 from .decorators import unauthenticated_user, allowed_users, admin_only
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
+import datetime
+import numpy as np
 
 @unauthenticated_user
 def registerPage(request):
@@ -82,7 +85,7 @@ def home(request):
 	total_customers = customers.count()
 
 	total_orders = orders.count()
-	delivered = orders.filter(date='Delivered').count()
+	delivered = orders.filter(status='Delivered').count()
 	pending = orders.filter(status='Pending').count()
 
 	context = {'orders':orders, 'customers':customers,
@@ -244,6 +247,34 @@ def accountSettings(request):
 @allowed_users(allowed_roles=['customer', 'admin'])
 def graphics(request):
 	orders = Order.objects.all()
+	print(orders)
+ 
 	
+	
+	dates = ""
+	order_date = np.array = []
+	
+	for i in orders:
+		dates = i.date_created.strftime('%Y-%m-%d')
+		order_date.append(dates)
+
+	order_date = np.unique(order_date, axis=0)
+	print(order_date)
+	
+	contagem = ""
+	order_orders = np.array = []
+	for i in order_date:
+		
+		contagem = Order.objects.filter(date_created__date=i).count()
+		
+		order_orders.append(contagem)
+ 
+	
+		order_orders = np.unique(order_date, axis=0)
+		print(order_orders)
+	
+ 
+ 
+ 
 	context = {'orders':orders}
 	return render(request, 'accounts/graphics.html', context)
