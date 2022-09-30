@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-white mb-3" id="total-orders">
+                <div class="card-header">
+                    <h5 class="card-title">Daily Orders Table</h5>
+                </div>
+                <div class="card card-body">
+			
+                    <table class="table table-sm">
+                        <tr>
+                        
+                            <th>Day</th>
+                            <th>Orders</th>
+                        </tr>
+        
+                        {% for i in x %}
+                            <tr>
+                                <td>{{i}}</td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

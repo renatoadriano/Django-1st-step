@@ -19,6 +19,7 @@ from .decorators import unauthenticated_user, allowed_users, admin_only
 from datetime import date, timedelta
 import datetime
 import numpy as np
+import json
 
 @unauthenticated_user
 def registerPage(request):
@@ -257,24 +258,25 @@ def graphics(request):
 	for i in orders:
 		dates = i.date_created.strftime('%Y-%m-%d')
 		order_date.append(dates)
-
+		
 	order_date = np.unique(order_date, axis=0)
-	print(order_date)
-	
+	#conversão para array
+	x = order_date.tolist()
+
+	print(x)
 	contagem = ""
-	order_orders = np.array = []
-	for i in order_date:
-		
-		contagem = Order.objects.filter(date_created__date=i).count()
-		
+	order_orders = []
+	
+	for i in order_date:		
+		contagem = Order.objects.filter(date_created__date=i).count()		
 		order_orders.append(contagem)
- 
+
+	print(order_date)
+	print(order_orders)
+
+	array1 = json.dumps(x)
+	array2 = json.dumps(order_orders)
 	
-		order_orders = np.unique(order_date, axis=0)
-		print(order_orders)
-	
- 
- 
- 
-	context = {'orders':orders}
+	context = {'orders':orders, 'array1':array1, 'array2':array2, 'x': x}
 	return render(request, 'accounts/graphics.html', context)
+

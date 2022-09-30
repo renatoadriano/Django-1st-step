@@ -1,7 +1,7 @@
 {%  extends 'accounts/main.html' %}
 
-{% block content %}
 
+{% block content %}
 <div class="row mt-3 pt-3">
     
     <div class="col-md-7">
@@ -11,14 +11,16 @@
         <canvas id="myChart"></canvas>
         
             <script>
+                var array1 = {{ array1|safe }}
+                var array2 =  {{ array2|safe }};
                 var ctx = document.getElementById('myChart').getContext('2d');
                 var myChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: [{% for orders in orders %} '{{ orders.date_created }}', {% endfor %}],
+                        labels: array1,
                         datasets: [{
                             label: 'Daily deliveries',
-                            data: [],
+                            data: array2,
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.2)',
                                 'rgba(54, 162, 235, 0.2)',
@@ -47,12 +49,18 @@
                     }
                 });
             </script>
+            
         </div>
+    
     </div>
-
-
+    {% include 'accounts/graphics_table.html'%}
 </div>
 
 
+{% include 'accounts/graphics2.html'%}
 
 {% endblock %}
+
+
+
+
