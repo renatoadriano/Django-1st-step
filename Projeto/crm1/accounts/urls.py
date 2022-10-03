@@ -34,6 +34,8 @@ urlpatterns = [
     path('update_order/<str:pk>/', views.updateOrder, name="update_order"),
     path('delete_order/<str:pk>/', views.deleteOrder, name="delete_order"),
 
+    path('searchorders/', views.searchorders, name="searchorders"),
+
     path('reset_password/',
      auth_views.PasswordResetView.as_view(template_name="accounts/password_reset.html"),
      name="reset_password"),

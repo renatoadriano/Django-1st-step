@@ -1,3 +1,4 @@
+from sqlite3 import Date
 from telnetlib import STATUS
 from django.shortcuts import render, redirect 
 from django.http import HttpResponse, JsonResponse
@@ -14,7 +15,7 @@ from django.contrib.auth.models import Group
 # Create your views here.
 from .models import *
 from .forms import OrderForm, CreateUserForm, CustomerForm
-from .filters import OrderFilter, Order
+from .filters import OrderFilter, Order, DateFilter
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from datetime import date, timedelta
 import datetime
@@ -248,7 +249,7 @@ def accountSettings(request):
 @allowed_users(allowed_roles=['customer', 'admin'])
 def graphics(request):
 	orders = Order.objects.all()
-	print(orders)
+	
  
 	
 	
@@ -262,8 +263,8 @@ def graphics(request):
 	order_date = np.unique(order_date, axis=0)
 	#conversão para array
 	x = order_date.tolist()
-
-	print(x)
+	
+	
 	contagem = ""
 	order_orders = []
 	
@@ -271,12 +272,77 @@ def graphics(request):
 		contagem = Order.objects.filter(date_created__date=i).count()		
 		order_orders.append(contagem)
 
-	print(order_date)
-	print(order_orders)
+	
 
 	array1 = json.dumps(x)
 	array2 = json.dumps(order_orders)
 	
-	context = {'orders':orders, 'array1':array1, 'array2':array2, 'x': x}
+	#criação de variável para o ZIP
+	mylist = zip(x, order_orders) 
+	#junção das arrays em zip
+		
+	
+
+	for (a, b) in  zip(x, order_orders):
+		print (a, b) # print das arrays em ordem e em correspondência
+	
+
+	context = {'orders':orders, 'array1':array1, 'array2':array2, 'x': x, 'mylist':mylist}
 	return render(request, 'accounts/graphics.html', context)
 
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer', 'admin'])
+def searchorders(request):
+	order = Order.objects.all()
+	dates = ""
+	order_date = np.array = []
+	
+	for i in order:
+		dates = i.date_created.strftime('%Y-%m-%d')
+		order_date.append(dates)
+		
+	order_date = np.unique(order_date, axis=0)
+	#conversão para array
+	x = order_date.tolist()
+	
+	
+	contagem = ""
+	order_orders = []
+	
+	for i in order_date:		
+		contagem = Order.objects.filter(date_created__date=i).count()		
+		order_orders.append(contagem)
+
+	
+
+	array1 = json.dumps(x)
+	array2 = json.dumps(order_orders)
+	
+	#criação de variável para o ZIP
+	mylist = zip(x, order_orders) 
+	#junção das arrays em zip
+		
+	
+
+	for (a, b) in  zip(x, order_orders):
+		print (a, b) # print das arrays em ordem e em correspondência
+	
+
+
+	if request.method == "POST":
+		
+		orddate = request.POST.get('orddate')
+
+		print(orddate)
+
+		order = Order.objects.filter( date_created__date = orddate)
+		
+
+	else:
+		pass
+	
+	
+	context = {'order':order, 'array1':array1, 'array2':array2, 'x': x, 'mylist':mylist}
+	return render(request, 'accounts/graphics.html', context)
