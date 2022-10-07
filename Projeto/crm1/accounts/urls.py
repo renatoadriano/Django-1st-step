@@ -24,7 +24,11 @@ urlpatterns = [
 
     path('delete_products/', views.delete_products, name='delete_products'),
 
+    path('category/', views.category, name='category'),
+    path('add_category/', views.add_category, name='add_category'),
+
     path('products/', views.products, name='products'),
+    path('products_/', views.products_, name='products_'),
     path('customer/<str:pk_test>/', views.customer, name="customer"),
 
     path('graphics/', views.graphics, name="graphics"),
@@ -34,7 +38,7 @@ urlpatterns = [
     path('update_order/<str:pk>/', views.updateOrder, name="update_order"),
     path('delete_order/<str:pk>/', views.deleteOrder, name="delete_order"),
 
-    path('searchorders/', views.searchorders, name="searchorders"),
+
 
     path('reset_password/',
      auth_views.PasswordResetView.as_view(template_name="accounts/password_reset.html"),

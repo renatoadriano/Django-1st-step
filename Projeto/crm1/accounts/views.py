@@ -113,42 +113,78 @@ def userPage(request):
 
 
 
-
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin','customer'])
 def add_products(request):
 	
+	
 	if request.method == 'POST':
-		#name = request.POST['name']
-		#category = request.POST['category']
-		#price = request.POST['price']
-
+		
 		prod_name = request.POST.get('prod_name')
 		prod_price =request.POST.get('prod_price')
 		prod_cat = request.POST.get('prod_cat')
 		username= request.POST.get('username')
 
-		print(prod_name, prod_price, prod_cat)
-		products = Product(name = prod_name, price = prod_price, category = prod_cat, user= username)
+		
+		products = Product(name = prod_name, price = prod_price, user= username)
+		category = Category(category= prod_cat)
+		
+		
+		
 		products.save()
+		
 		return JsonResponse({'status': 'true', 'message': 'Produto criado!'}, status=200, safe=False)
 		
 	else:
 		pass
 
 	products = Product.objects.all()
-	context = {
-		'name':prod_name, 'category':prod_cat, 'price':prod_price
-	}
+	
+	
+	
 
-	return render(request, 'accounts/products.html', {'products':products})
+	return render(request, 'accounts/products.html', {'products':products, 'category':category})
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin','customer'])
+def add_category(request):
+	
+	if request.method == 'POST':
+
+		prod_cat = request.POST.get('prod_cat')
+
+
+		print(prod_cat)
+		category = Category(category = prod_cat)
+		category.save()
+		return JsonResponse({'status': 'true', 'message': 'Categoria criada!'}, status=200, safe=False)
+		
+	else:
+		pass
+
+	
+	category = Category.objects.all()
+	
+
+	return render(request, 'accounts/category.html', {'category':category})
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'customer'])
+def category(request):
+	
+	
+	
+	category = Category.objects.all()
+	
+	context = {'category': category}
+	return render(request, 'accounts/category.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin','customer'])
 def delete_products(request):
 	prod_id = request.POST.get('prod_id')
 	product = Product.objects.get(id = prod_id)
-	print(product.name, product.category, product.price)
+	
 
 	if request.method == "POST":
 		product.delete()
@@ -158,15 +194,26 @@ def delete_products(request):
 	return render(request, 'accounts/products.html', context)
 
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['customer', 'admin'])
+@admin_only
 def products(request):
 	user = request.user
-	print(user)
+	print(" :) ")
+	
+	category = Category.objects.all()
+	products = Product.objects.all()
+	
+	context = {'products':products, 'username':user, 'category':category}
+	return render(request, 'accounts/products.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def products_(request):
+	user = request.user
+	
 	products = Product.objects.all()
 	
 	context = {'products':products, 'username':user}
-	return render(request, 'accounts/products.html', context)
+	return render(request, 'accounts/products_.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
@@ -290,59 +337,3 @@ def graphics(request):
 	context = {'orders':orders, 'array1':array1, 'array2':array2, 'x': x, 'mylist':mylist}
 	return render(request, 'accounts/graphics.html', context)
 
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['customer', 'admin'])
-def searchorders(request):
-	order = Order.objects.all()
-	dates = ""
-	order_date = np.array = []
-	
-	for i in order:
-		dates = i.date_created.strftime('%Y-%m-%d')
-		order_date.append(dates)
-		
-	order_date = np.unique(order_date, axis=0)
-	#conversão para array
-	x = order_date.tolist()
-	
-	
-	contagem = ""
-	order_orders = []
-	
-	for i in order_date:		
-		contagem = Order.objects.filter(date_created__date=i).count()		
-		order_orders.append(contagem)
-
-	
-
-	array1 = json.dumps(x)
-	array2 = json.dumps(order_orders)
-	
-	#criação de variável para o ZIP
-	mylist = zip(x, order_orders) 
-	#junção das arrays em zip
-		
-	
-
-	for (a, b) in  zip(x, order_orders):
-		print (a, b) # print das arrays em ordem e em correspondência
-	
-
-
-	if request.method == "POST":
-		
-		orddate = request.POST.get('orddate')
-
-		print(orddate)
-
-		order = Order.objects.filter( date_created__date = orddate)
-		
-
-	else:
-		pass
-	
-	
-	context = {'order':order, 'array1':array1, 'array2':array2, 'x': x, 'mylist':mylist}
-	return render(request, 'accounts/graphics.html', context)

@@ -22,16 +22,17 @@ class Tag(models.Model):
 	def __str__(self):
 		return self.name
 
+class Category(models.Model):
+	category = models.CharField(max_length=200)
+	def __str__(self):
+		return self.category
 
 class Product(models.Model):
-	CATEGORY = (
-			('Indoor', 'Indoor'),
-			('Out Door', 'Out Door'),
-			) 
+	
 	user = models.CharField(max_length=200, default="")
 	name = models.CharField(max_length=200)
 	price = models.FloatField()
-	category = models.CharField(max_length=200, choices=CATEGORY)
+	category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
 	description = models.CharField(max_length=200, null=True, blank=True)
 	date_created = models.DateTimeField(auto_now_add=True, null=True)
 	tags = models.ManyToManyField(Tag)
@@ -55,7 +56,6 @@ class Order(models.Model):
 
 	def __str__(self):
 		return self.product.name
-
 
 
 	

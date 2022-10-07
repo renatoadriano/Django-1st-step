@@ -26,13 +26,12 @@
                                 <label>Category</label>
                                 <select id="prod_cat" name="category" class="form-control">
                                     <option value="">Select Category</option>
-                                    {%for i in category %}
+                                    {%for i in products %}
                                         <option id="prod_cat" value="{{i.category}}">
                                             {{i.category}}
                                         </option>
                                     {%endfor %}
                                 </select>
-                                    
                             </div>
                             <div class="form-group mb-3">
                                 <label>Price</label>
@@ -67,7 +66,7 @@
                         <th>Product</th>
                         <th>Category</th>
                         <th>Price</th>
-                        <th>Delete</th>
+                        
                     </tr>
                     
                     {% for i in products %}
@@ -79,7 +78,7 @@
                             <td>{{i.name}}</td>
                             <td>{{i.category}}</td>
                             <td>{{i.price}}</td>
-                            <td><button class="btn btn-primary btn-danger" onClick="delete_product('{{i.id}}')" >DELETE</button></td>
+                            
                         </tr>
                     {% endfor %}
                 </table>

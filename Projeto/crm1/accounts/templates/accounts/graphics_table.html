@@ -1,83 +1,30 @@
+<div>
+    <table id="table_id" class="display">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Products</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a, b in mylist %}
 
-<div class="row">
-    
-    <div class="col">
-        <div class="col-md">
-            <div>
-                
-                <label>Order date:</label>
-                {% csrf_token %}
-                <input type="text" name="date" class="" placeholder="yyyy-mm-dd" id="orddate">
-                <button type="submit" class="bnt-sm btn-danger" onclick="search()" >Search</button>
-            </div>
-            
-            <div class="card text-center text-white mb-3" id="total-orders">
-                
-                <div class="card-header">
-                    <h5 class="card-title">Daily Orders Table</h5>
-                </div>
-                <div class="card card-body">
-                    <form method="get">
-                    <table class="table table-sm">
-                        <tr>
+            <tr>
+                <td>{{a}}</td>
+                <td>{{b}}</td>
+            </tr>
                         
-                            <th>Day</th>
-                            <th>Orders</th>
-                        </tr>
-        
-                        {% for a, b in mylist %}
-                        {% csrf_token %}
-                            <tr>
-                                <td>{{a}}</td>
-                                <td>{{b}}</td>
-                            </tr>
-                        
-                        {% endfor %}
-
-                    </table>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 <script>
 
-    function search(){
-
-        var orddate = document.getElementById('orddate').value
-
-        console.log(orddate)
-
-        $.ajax({
-
-            url: "{% url 'searchorders' %}",
-
-            type: "POST",
-
-            data: {
-                orddate: orddate,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-            },
-
-            success: function () {
-                
-                    document.location.href = "{% url 'searchorders' %}";
-                
-            },
-                // what to do when the call is complete ( you can right your clean from code here)
-            complete: function () { },
-                // what to do when there is an error
-            error: function (xhr, textStatus, thrownError) { 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: "Something went wrong!"
-                })
-            }
+    $(document).ready( function () {
+        $('#table_id').DataTable({
+            "order": [[1, "asc"]],
         });
-    }
-    
+    } );
 
 </script>

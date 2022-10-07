@@ -1,0 +1,86 @@
+{%  extends 'accounts/main.html' %}
+
+{% block content %}
+
+<br>
+    <hr>
+                <div class="col-md">
+                    <div class="card card-body">
+                        <h5>Create a Category:</h5>
+                        <hr>
+
+                        {% csrf_token %}
+
+                        <div class="form-group mb-3">
+                            <label>Category:</label>
+                            <input type="text" class="form-control" name="category" placeholder="Enter category" id="prod_cat">
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary" onclick="create_category()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <br>
+                <div class="row">
+                    <div class="col-md">
+                        <div class="card card-body">
+                            <h5>Category:</h5>
+                        </div>
+                        <div class="card card-body">
+                            <table class="table">
+                            <tr>
+                                <th>Category</th>
+                            </tr>
+                            {%for i in category %}
+                            {% csrf_token %}
+                                <tr>
+                                    <td>{{i.category}}</td>
+                                </tr>
+                            {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                    
+
+                <script>
+
+                    function create_category(){
+
+                        var prod_cat = document.getElementById('prod_cat').value
+
+                        console.log(prod_cat)
+
+                        $.ajax({
+
+                            url: "{% url 'add_category' %}",
+
+                            type: 'POST',
+
+                            data: {
+                                prod_cat: prod_cat,
+                                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                            },
+                            success: function () {
+                                Swal.fire(
+                                'Good job!',
+                                'Category created successfully!',
+                                'success'
+                                ).then(function () {
+                                    document.location.href = "{% url 'category' %}";
+                                });
+                            },
+                            complete: function () { },
+                            // what to do when there is an error
+                            error: function (xhr, textStatus, thrownError) { 
+                            $('#prod_cat').attr('style','border:1px solid red');
+                            }
+
+                        })
+
+                    }
+                    
+
+                </script>
+{% endblock content %}
